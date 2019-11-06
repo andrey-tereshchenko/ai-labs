@@ -7,13 +7,13 @@ from src.evaluator import Evaluator
 DEBUG = True
 
 
-def run(zone, agent, calculus):
+def run(zone, agent, calculus, iteration):
     zone.change()
-
     agent.prespective(zone)
 
     # action = agent.think_random(zone.maze)
-    action = agent.think_reflex(zone.maze)
+    #action = agent.think_reflex(zone.maze)
+    action = agent.think_model_based(zone.maze,  iteration)
     print(action)
     zone.accept_action(action)
     calculus.evaluete(action, zone)
@@ -26,10 +26,11 @@ def main():
     bond = Agent(zone)
 
     current_time = 0
+    bond.agent_map[bond.posX][bond.posY] = 1
     calculus = Evaluator()
 
     while current_time < life_time:
-        run(zone, bond, calculus)
+        run(zone, bond, calculus, current_time)
         current_time += 1
     print("Cleaned dirty: " + str(calculus.cleaned_dirty))
     print("consumed energy: " + str(calculus.consumed_energy))
