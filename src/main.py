@@ -11,7 +11,7 @@ def run(zone, agent, calculus, iteration):
     zone.change()
     agent.prespective(zone)
 
-    # action = agent.think_random(zone.maze)
+    #action = agent.think_random(zone.maze)
     #action = agent.think_reflex(zone.maze)
     action = agent.think_model_based(zone.maze,  iteration)
     print(action)
@@ -31,6 +31,11 @@ def main():
 
     while current_time < life_time:
         run(zone, bond, calculus, current_time)
+        print('|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|')
+        for line in bond.agent_map:
+            print(['{0:3}'.format(x) for x in line])
+        print('|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|\n')
+
         current_time += 1
     print("Cleaned dirty: " + str(calculus.cleaned_dirty))
     print("consumed energy: " + str(calculus.consumed_energy))

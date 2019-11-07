@@ -13,7 +13,7 @@ class Agent:
 
     def __init__(self, zone):
         self.msg = 'Hello World, i\'m Vacuum'
-        self.agent_map = [[zone.maze[col][row] for col in range(zone.size)] for row in range(zone.size)]
+        self.agent_map = [[zone.maze[row][col] for col in range(zone.size)] for row in range(zone.size)]
         self.posX = zone.positionX
         self.posY = zone.positionY
 
@@ -61,7 +61,7 @@ class Agent:
             for j in range(len(self.agent_map)):
                 if int(self.agent_map[i][j]) >= 0 and int(self.agent_map[i][j]) <= min:
                     if int(self.agent_map[i][j]) == min:
-                        if module <= abs(self.posX - i) + abs(self.posY - j):
+                        if module >= abs(self.posX - i) + abs(self.posY - j):
                             min = self.agent_map[i][j]
                             min_x = i
                             min_y = j
@@ -84,26 +84,6 @@ class Agent:
             return self.down()
         elif maze[self.posX - 1][self.posY] == 1:
             return self.up()
-        elif maze[self.posX - 1][self.posY - 1] == 1:
-            if maze[self.posX - 1][self.posY] != -1:
-                return self.up()
-            else:
-                return self.left()
-        elif maze[self.posX - 1][self.posY + 1] == 1:
-            if maze[self.posX - 1][self.posY] != -1:
-                return self.up()
-            else:
-                return self.right()
-        elif maze[self.posX + 1][self.posY + 1] == 1:
-            if maze[self.posX + 1][self.posY] != -1:
-                return self.down()
-            else:
-                return self.right()
-        elif maze[self.posX + 1][self.posY - 1] == 1:
-            if maze[self.posX + 1][self.posY] != -1:
-                return self.down()
-            else:
-                return self.left
         else:
             actions = [self.up(), self.down(), self.left(), self.right(), self.idle()]
             return actions[int(random.random() * 5)]
@@ -126,33 +106,33 @@ class Agent:
             self.agent_map[self.posX - 1][self.posY] = iteration
             return self.up()
         elif maze[self.posX - 1][self.posY - 1] == 1:
-            if maze[self.posX - 1][self.posY] != -1:
+            if int(maze[self.posX - 1][self.posY]) != -1:
                 self.agent_map[self.posX - 1][self.posY] = iteration
                 return self.up()
             else:
                 self.agent_map[self.posX][self.posY - 1] = iteration
                 return self.left()
         elif maze[self.posX - 1][self.posY + 1] == 1:
-            if maze[self.posX - 1][self.posY] != -1:
+            if int(maze[self.posX - 1][self.posY]) != -1:
                 self.agent_map[self.posX - 1][self.posY] = iteration
                 return self.up()
             else:
                 self.agent_map[self.posX][self.posY + 1] = iteration
                 return self.right()
         elif maze[self.posX + 1][self.posY + 1] == 1:
-            if maze[self.posX + 1][self.posY] != -1:
+            if int(maze[self.posX + 1][self.posY]) != -1:
                 self.agent_map[self.posX + 1][self.posY] = iteration
                 return self.down()
             else:
                 self.agent_map[self.posX][self.posY + 1] = iteration
                 return self.right()
         elif maze[self.posX + 1][self.posY - 1] == 1:
-            if maze[self.posX + 1][self.posY] != -1:
+            if int(maze[self.posX + 1][self.posY]) != -1:
                 self.agent_map[self.posX + 1][self.posY] = iteration
                 return self.down()
             else:
                 self.agent_map[self.posX][self.posY - 1] = iteration
-                return self.left
+                return self.left()
         else:
             x, y = self.find_min_elements_without_negative()
             if int(maze[self.posX + 1][self.posY]) != -1 and self.posX < x:
@@ -169,5 +149,5 @@ class Agent:
                     self.agent_map[self.posX][self.posY - 1] = iteration
                     return self.left()
                 else:
-                    actions = [self.up(), self.down(), self.left(), self.right()]
-                    return actions[int(random.random() * 4)]
+                    actions = [self.up(), self.down(), self.left(), self.right(), self.idle()]
+                    return actions[int(random.random() * 5)]
