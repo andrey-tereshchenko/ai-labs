@@ -106,8 +106,8 @@ class Environment:
     def print_maze(self):
         value = self.maze[self.positionX][self.positionY]
         self.maze[self.positionX][self.positionY] = '|@|'
-        print('|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|')
-        for line in self.maze:
-            print(['{0:3}'.format(x) for x in line])
-        print('|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|\n')
+        # print('|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|')
+        # for line in self.maze:
+        #     print(['{0:3}'.format(x) for x in line])
+        # print('|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|===|\n')
         self.maze[self.positionX][self.positionY] = value
