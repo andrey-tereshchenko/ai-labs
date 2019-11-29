@@ -1,4 +1,3 @@
-import random
 import copy
 
 
@@ -60,6 +59,15 @@ class State:
             states.append(State(new_matrix, self.depth + 1))
         return states
 
+    def get_heuristic_evaluate(self):
+        final_matrix = self.get_final_state().matrix
+        estimation = 0
+        for i in range(3):
+            for j in range(3):
+                if self.matrix[i][j] != final_matrix[i][j]:
+                    estimation += 1
+        return estimation
+
 
 class Node:
     def __init__(self, current_state):
@@ -67,69 +75,4 @@ class Node:
         self.current_state = current_state
         self.next_states = current_state.get_next_states()
 
-
-class LDFS:
-    def __init__(self, node, final_state, max_depth=None):
-        self.counter = 0
-        self.node = node
-        self.max_depth = max_depth
-        self.final_state = final_state
-        self.visited_matrix = []
-        self.finish_flag = False
-
-    def run(self):
-        if not self.finish_flag:
-            self.node.current_state.print_state()
-            self.counter += 1
-            print('Counter:' + str(self.counter))
-            self.visited_matrix.append(self.node.current_state.matrix)
-            if self.node.current_state.matrix == self.final_state.matrix:
-                self.finish_flag = True
-                return
-
-            if self.node.current_state.depth < self.max_depth:
-                if self.node.next_states:
-                    for i in self.node.next_states:
-                        if i.matrix not in self.visited_matrix:
-                            self.node = Node(i)
-                            self.run()
-                        else:
-                            self.counter += 1
-                else:
-                    return
-            else:
-                return
-        else:
-            return
-
-
-class IDS:
-    def __init__(self, ldfs):
-        self.counter = 0
-        self.ldfs = ldfs
-        self.stop_flag = False
-        self.current_depth = 1
-
-    def run(self):
-        while not self.stop_flag:
-            ldfs = copy.deepcopy(self.ldfs)
-            ldfs.max_depth = self.current_depth
-            ldfs.run()
-            self.counter += ldfs.counter
-            self.stop_flag = ldfs.finish_flag
-            self.current_depth += 1
-
-
-moves = 80
-init_state = State.get_final_state()
-for i in range(moves):
-    init_state = random.choice(init_state.get_next_states())
-init_state.depth = 0
-final_state = State.get_final_state()
-root = Node(init_state)
-ldfs = LDFS(root, final_state)
-ids = IDS(ldfs)
-ids.run()
-print("Total generated states:" + str(ids.counter))
-print("Approached depth search:" + str(ids.current_depth))
 
