@@ -39,7 +39,6 @@ def test_rdfs_algorithm(moves, iteration):
         init_state.depth = 0
         root = Node(init_state)
         start = time.time()
-        ldfs = LDFS(root, final_state)
         rbfs = RBFS(root, final_state)
         rbfs.run()
         end = time.time()

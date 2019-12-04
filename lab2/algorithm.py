@@ -55,6 +55,8 @@ class IDS:
             self.states_stored += len(ldfs.visited_matrix)
             self.stop_flag = ldfs.finish_flag
             self.current_depth += 1
+            if self.current_depth == 20:
+                break
 
 
 class RBFS:
