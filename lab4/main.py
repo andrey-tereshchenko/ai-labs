@@ -1,5 +1,3 @@
-import pprint
-
 
 class Actions:
     def __init__(self):
@@ -29,11 +27,27 @@ class Cave:
         # else = 4
         self.field = [
             [4, 4, 2, 4],
-            [4, 3, 2, 4],
+            [4, 4, 2, 4],
             [3, 1, 4, 4],
-            [4, 2, 4, 2]
+            [4, 2, 4, 3]
         ]
         self.VIY = True
+
+    def print_cave(self, homa_position):
+        for i in range(len(self.field)):
+            for j in range(len(self.field[0])):
+                if (i, j) == homa_position:
+                    print('%10s' % 'homa', sep=' ', end=' ')
+                else:
+                    if self.field[i][j] == 1:
+                        print('%10s' % 'viy', sep=' ', end=' ')
+                    if self.field[i][j] == 2:
+                        print('%10s' % 'princess', sep=' ', end=' ')
+                    if self.field[i][j] == 3:
+                        print('%10s' % 'gold', sep=' ', end=' ')
+                    if self.field[i][j] == 4:
+                        print('%10s' % 'empty', sep=' ', end=' ')
+            print()
 
     def get_info(self, x, y):
         s = Sensors()
@@ -50,13 +64,13 @@ class Cave:
                 ((pos2x != -1) and (self.field[pos2x][pos2y] == 1)) or
                 ((pos3y != -1) and (self.field[pos3x][pos3y] == 1)) or
                 ((pos4y != -1) and (self.field[pos4x][pos4y] == 1))
-        ):
+            ):
             s.stink = True
         if (((pos1x != -1) and (self.field[pos1x][pos1y] == 2)) or
                 ((pos2x != -1) and (self.field[pos2x][pos2y] == 2)) or
                 ((pos3y != -1) and (self.field[pos3x][pos3y] == 2)) or
                 ((pos4y != -1) and (self.field[pos4x][pos4y] == 2))
-        ):
+            ):
             s.wind = True
 
         return s
@@ -114,12 +128,15 @@ class Agent:
             [-1, -1, -1, -1]
         ]
 
-        self.pCount = 2
+        self.pCount = 3
         self.gCount = 2
         self.return_count = 0
 
         self.current = Coords(0, 0)
         self.visited = [Coords(0, 0)]
+
+    def print_cave(self):
+        self.cave.print_cave((self.current.x, self.current.y))
 
     def set_predict_by_sensors(self, sensor):
         pos1x = self.current.x + 1 if self.current.x != 3 else -1
@@ -274,7 +291,7 @@ class Agent:
             self.current.y = c.y
             self.score -= 1
             self.visited.append(c)
-        elif (self.return_count <= 16 and (check(self.visited, self.current.x, self.current.y) > 0)):
+        elif (self.return_count <= 4 and (check(self.visited, self.current.x, self.current.y) > 0)):
             id_ = find_index(self.visited, self.current.x, self.current.y)
             self.return_count += 1
             c = Coords(self.visited[id_].x, self.visited[id_].y)
@@ -331,7 +348,7 @@ class Agent:
 
                             self.cave.throw_arm(self.current.x, self.current.y, 'r')
 
-        elif (self.return_count > 16) and (len(exit_unknown) > 0):
+        elif (self.return_count > 4) and (len(exit_unknown) > 0):
             self.return_count = 0
             c = Coords(exit_unknown[0].x, exit_unknown[0].y)
             self.current.x = c.x
@@ -379,7 +396,7 @@ Homa = Agent(cave)
 while ((not Homa.Win) and (not Homa.Loose)):
     print()
     print(Homa.current.x, Homa.current.y)
-    pprint.pprint(Homa.cave.field)
+    Homa.print_cave()
 
     sence = Homa.cave.get_info(Homa.current.x, Homa.current.y)
 
